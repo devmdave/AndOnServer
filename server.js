@@ -24,7 +24,9 @@ app.get('/', (req, res) => res.send('AndOn Server is running.'));
 mongoose
     .connect(process.env.MONGO_URI)
     .then(() => console.log('✅ MongoDB connected'))
-    .catch((err) => { console.error('❌ MongoDB connection error:', err); process.exit(1); });
+    .catch((err) => {
+        console.error('❌ MongoDB connection error:', err);
+    });
 
 // ─── HELPER: broadcast current ALERT/ACK data to all clients ─────────────────
 async function broadcastWeldshopData() {
