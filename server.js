@@ -19,6 +19,7 @@ app.use(express.json());
 
 // Simple health-check endpoint
 app.get('/', (req, res) => res.send('AndOn Server is running.'));
+app.get('/health', (req, res) => res.status(200).json({ status: 'ok', uptime: process.uptime() }));
 
 // ─── STARTUP ──────────────────────────────────────────────────────────────────
 async function startServer() {
