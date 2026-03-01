@@ -36,6 +36,22 @@ async function startServer() {
 
 startServer();
 
+// ─── GRACEFUL SHUTDOWN ────────────────────────────────────────────────────────
+const shutdown = async () => {
+    console.log('\n🛑 Shutting down gracefully...');
+    try {
+        await mongoose.connection.close();
+        console.log('📦 MongoDB connection closed');
+        process.exit(0);
+    } catch (err) {
+        console.error('❌ Error during shutdown:', err);
+        process.exit(1);
+    }
+};
+
+process.on('SIGTERM', shutdown);
+process.on('SIGINT', shutdown);
+
 // ─── HELPER: broadcast current ALERT/ACK data to all clients ─────────────────
 async function broadcastWeldshopData() {
     try {
