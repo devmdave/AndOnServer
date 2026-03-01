@@ -9,13 +9,16 @@ const { User, Breakdown, Weldshop } = require('./models/Data');
 
 // ─── APP SETUP ────────────────────────────────────────────────────────────────
 const app = express();
+app.use(cors()); // Enable CORS for Express
+app.use(express.json());
+
 const server = http.createServer(app);
 const io = new Server(server, {
-    cors: { origin: '*', methods: ['GET', 'POST'] },
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
 });
-
-app.use(cors());
-app.use(express.json());
 
 // Simple health-check endpoint
 app.get('/', (req, res) => res.send('AndOn Server is running.'));
@@ -49,6 +52,7 @@ const shutdown = async () => {
         process.exit(1);
     }
 };
+
 
 process.on('SIGTERM', shutdown);
 process.on('SIGINT', shutdown);
