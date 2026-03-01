@@ -20,13 +20,21 @@ app.use(express.json());
 // Simple health-check endpoint
 app.get('/', (req, res) => res.send('AndOn Server is running.'));
 
-// ─── MONGODB CONNECTION ───────────────────────────────────────────────────────
-mongoose
-    .connect(process.env.MONGO_URI)
-    .then(() => console.log('✅ MongoDB connected'))
-    .catch((err) => {
+// ─── STARTUP ──────────────────────────────────────────────────────────────────
+async function startServer() {
+    try {
+        await mongoose.connect(process.env.MONGO_URI);
+        console.log('✅ MongoDB connected');
+
+        const PORT = process.env.PORT || 3000;
+        server.listen(PORT, () => console.log(`🚀 Server listening on port ${PORT}`));
+    } catch (err) {
         console.error('❌ MongoDB connection error:', err);
-    });
+        process.exit(1);
+    }
+}
+
+startServer();
 
 // ─── HELPER: broadcast current ALERT/ACK data to all clients ─────────────────
 async function broadcastWeldshopData() {
@@ -239,6 +247,3 @@ io.on('connection', (socket) => {
     });
 });
 
-// ─── START ────────────────────────────────────────────────────────────────────
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`🚀 Server listening on port ${PORT}`));
